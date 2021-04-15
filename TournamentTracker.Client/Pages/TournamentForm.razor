@@ -1,0 +1,170 @@
+﻿@page "/TournamentForm"
+@using TournamentTracker.Shared.Models
+@using TournamentTracker.Client.Data
+
+@inject ITeamService teamService;
+@inject IMemberService memberService;
+@inject ITournamentService tournamentService;
+
+
+
+<EditForm Model="@Tournament" OnValidSubmit="@HandleSubmit" class="w-50 mx-auto">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <h2 class="text-primary">Создать турнир</h2>
+    <div class="form-group">
+        <label class="w-100" for="name">Название турнира:</label>
+        <InputText class="w-100 form-control" id="name" @bind-Value="Tournament.TournamentName" />
+    </div>
+    <div class="form-group">
+        <label class="w-100" for="fee">Вступительный взнос:</label>
+        <InputNumber class="w-100 form-control" id="fee" @bind-Value="Tournament.EntryFee" />
+    </div>
+
+    @if (AllTeams != null)
+    {
+        <div class="form-group">
+            <div>
+                <label class="w-100" for="members">Выберете команду:</label>
+                <button class="btn btn-btn-outline-secondary w-40"  @onclick:preventDefault="true" @onclick="() => { ShowTeamForm = true; }">Создать новую команду</button>
+            </div>
+
+            <InputSelect class="form-control w-100 mb-2" id="members" @bind-Value="@SelectedTeamId">
+                <option value="">Выберете команду ...</option>
+                @foreach (var member in AllTeams)
+                    {
+                    <option value="@member.Id.ToString()">@member.TeamName</option>
+                    }
+            </InputSelect>
+            <button class="btn btn-primary w-100 mb-2" @onclick:preventDefault="true" @onclick="addTeamToTournament" disabled="@(SelectedTeamId == null  ? true : false)">Добавить команду в турнир</button>
+        </div>
+    }
+    <div class="form-group">
+        <div>
+            <label class="w-49" for="name">Участники команды:</label>
+            <button class="btn btn-outline-danger float-right w-49 mb-2" @onclick:preventDefault="true" @onclick="() => { Tournament.EnteredTeams.Clear(); }">Удалить всех участников</button>
+        </div>
+        <p class="w-100">
+            @foreach (var t in Tournament.EnteredTeams)
+                @(t.TeamName + ", ")
+        </p>
+    </div>
+    <button class="btn btn-btn-outline-secondary w-40" @onclick:preventDefault="true" @onclick="() => { ShowPrizeForm = true; }">Создать новый приз</button>
+    <div class="form-group">
+        <div>
+            <label class="w-49" for="name">Призы:</label>
+            <button class="btn btn-outline-danger float-right w-49 mb-2" @onclick:preventDefault="true" @onclick="() => { Tournament.Prizes.Clear(); }">Удалить все призы</button>
+        </div>
+        <p class="w-100">
+            @foreach (var p in Tournament.Prizes)
+                @(p.PlaceName + ", ")
+        </p>
+    </div>
+
+    <button type="submit" class="w-100 btn btn-primary">Создать турнир</button>
+</EditForm>
+@if (ShowTeamForm)
+{
+    <div class=@(ShowTeamForm ? "show modal fade" : "modal fade") tabindex="-1" role="dialog" style="display: @(ShowTeamForm ? "block" : "none")">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <TeamForm CallBack="@UpdateAllTeamsList" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="() => { ShowTeamForm = false;}">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@if (ShowPrizeForm)
+{
+    <div class=@(ShowPrizeForm ? "show modal fade" : "modal fade") tabindex="-1" role="dialog" style="display: @(ShowPrizeForm ? "block" : "none")">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <PrizeForm TItem="Prize" CallBack="@AddPrizeToTournament" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="() => { ShowPrizeForm = false;}">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private Tournament Tournament = new Tournament();
+    private EditContext editContext;
+    private List<Team> AllTeams;
+    private string SelectedTeamId;
+    private bool showTeamForm;
+    private bool ShowTeamForm
+    {
+        get => showTeamForm;
+        set
+        {
+            showTeamForm = value;
+            StateHasChanged();
+        }
+    }
+    private bool showPrizeForm;
+    private bool ShowPrizeForm
+    {
+        get => showPrizeForm;
+        set
+        {
+            showPrizeForm = value;
+            StateHasChanged();
+        }
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        await UpdateAllTeamsList();
+        editContext = new EditContext(Tournament);
+    }
+    private async Task UpdateAllTeamsList(bool shoulUpdate = true)
+    {
+        AllTeams = await teamService.GetTeams();
+        StateHasChanged();
+    }
+
+    private async Task HandleSubmit()
+    {
+        var isValid = editContext.Validate();
+
+        if (isValid)
+        {
+            Tournament newTournament = new Tournament
+            {
+                TournamentName = Tournament.TournamentName
+            };
+            int newTournamentId = (await tournamentService.CreateTournament(newTournament)).Id;
+            foreach (var team in Tournament.EnteredTeams)
+            {
+                team.TournamentId = newTournamentId;
+                await teamService.EditTeam(team);
+            }
+
+            Tournament = new Tournament();
+            SelectedTeamId = null;
+            StateHasChanged();
+
+        }
+        else
+        {
+
+        }
+    }
+    private void addTeamToTournament()
+    {
+        Tournament.EnteredTeams.Add(AllTeams.Find(x => x.Id.ToString() == SelectedTeamId.ToString()));
+    }
+    private async Task AddPrizeToTournament(Prize prize)
+    {
+        Tournament.Prizes.Add(prize);
+    }
+
+
+}

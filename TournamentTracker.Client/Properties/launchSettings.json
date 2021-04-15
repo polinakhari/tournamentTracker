@@ -1,0 +1,29 @@
+{
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:62697",
+      "sslPort": 44368
+    }
+  },
+  "profiles": {
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "API_END_POINT": "https://localhost:5001/",
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "TournamentTracker.Client": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "applicationUrl": "https://localhost:44368;http://localhost:62697",
+      "environmentVariables": {
+        "API_END_POINT": "https://localhost:5001/",
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

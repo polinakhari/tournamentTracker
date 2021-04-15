@@ -1,0 +1,74 @@
+﻿@page "/MemberForm"
+@using TournamentTracker.Shared.Models
+@using TournamentTracker.Client.Data
+
+@inject IMemberService memberService;
+
+
+<EditForm Model="@Member" OnValidSubmit="HandleSubmit" class="w-50 mx-auto">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <h4>Создать участника</h4>
+    <div class="form-group">
+        <label class="w-100" for="fname">Имя:</label>
+        <InputText class="w-100 form-control" id="fname" @bind-Value="Member.FirstName" />
+    </div>
+    <div class="form-group">
+        <label class="w-100" for="lname">Фамилия:</label>
+        <InputText class="w-100 form-control" id="lname" @bind-Value="Member.LastName" />
+    </div>
+    <div class="form-group">
+        <label class="w-100" for="email">E-mail:</label>
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">@@</span>
+            </div>
+            <InputText id="email" class="form-control" @bind-Value="Member.EmailAddress" />
+        </div>
+    </div>
+    <button type="submit" class="w-100 btn btn-primary">Создать участника</button>
+</EditForm>
+
+@code {
+    [Parameter]
+    public EventCallback<bool> CallBack { get; set; }
+
+    private Person Member = new Person();
+    private EditContext editContext;
+    private bool ShouldUpdate = false;
+
+
+    protected override void OnInitialized()
+    {
+        editContext = new EditContext(Member);
+    }
+
+    private async Task HandleSubmit()
+    {
+        var isValid = editContext.Validate();
+
+        if (isValid)
+        {
+            Person newMember = new Person
+            {
+                FirstName = Member.FirstName,
+                LastName = Member.LastName,
+                EmailAddress = Member.EmailAddress
+            };
+
+            await memberService.CreateMember(newMember);
+            ShouldUpdate = true;
+            await CallBack.InvokeAsync(ShouldUpdate);
+            ShouldUpdate = false;
+            Member = new Person();
+            StateHasChanged();
+
+        }
+        else
+        {
+
+        }
+    }
+
+
+}

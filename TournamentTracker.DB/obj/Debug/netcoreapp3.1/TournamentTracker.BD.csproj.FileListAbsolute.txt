@@ -1,0 +1,12 @@
+C:\Users\Полина\source\repos\TournamentTracker\TournamentTracker.DB\obj\Debug\netcoreapp3.1\TournamentTracker.BD.csprojAssemblyReference.cache
+C:\Users\Полина\source\repos\TournamentTracker\TournamentTracker.DB\obj\Debug\netcoreapp3.1\TournamentTracker.BD.AssemblyInfoInputs.cache
+C:\Users\Полина\source\repos\TournamentTracker\TournamentTracker.DB\obj\Debug\netcoreapp3.1\TournamentTracker.BD.AssemblyInfo.cs
+C:\Users\Полина\source\repos\TournamentTracker\TournamentTracker.DB\obj\Debug\netcoreapp3.1\TournamentTracker.BD.csproj.CoreCompileInputs.cache
+C:\Users\Полина\source\repos\TournamentTracker\TournamentTracker.DB\bin\Debug\netcoreapp3.1\TournamentTracker.BD.deps.json
+C:\Users\Полина\source\repos\TournamentTracker\TournamentTracker.DB\bin\Debug\netcoreapp3.1\TournamentTracker.BD.runtimeconfig.json
+C:\Users\Полина\source\repos\TournamentTracker\TournamentTracker.DB\bin\Debug\netcoreapp3.1\TournamentTracker.BD.runtimeconfig.dev.json
+C:\Users\Полина\source\repos\TournamentTracker\TournamentTracker.DB\bin\Debug\netcoreapp3.1\TournamentTracker.BD.dll
+C:\Users\Полина\source\repos\TournamentTracker\TournamentTracker.DB\bin\Debug\netcoreapp3.1\TournamentTracker.BD.pdb
+C:\Users\Полина\source\repos\TournamentTracker\TournamentTracker.DB\obj\Debug\netcoreapp3.1\TournamentTracker.BD.dll
+C:\Users\Полина\source\repos\TournamentTracker\TournamentTracker.DB\obj\Debug\netcoreapp3.1\TournamentTracker.BD.pdb
+C:\Users\Полина\source\repos\TournamentTracker\TournamentTracker.DB\obj\Debug\netcoreapp3.1\TournamentTracker.BD.genruntimeconfig.cache

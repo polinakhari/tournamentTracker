@@ -1,0 +1,71 @@
+﻿@typeparam TItem
+
+@page "/PrizeForm"
+@using TournamentTracker.Shared.Models
+@using TournamentTracker.Client.Data
+
+@inject IPrizeService prizeService;
+
+
+
+<EditForm Model="@Prize" OnValidSubmit="@HandleSubmit" class="w-50 mx-auto">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <h4>Создать приз</h4>
+    <div class="form-group">
+        <label class="w-100" for="number">Номер места:</label>
+        <InputNumber class="w-100 form-control" id="number" @bind-Value="Prize.PlaceNumber" />
+    </div>
+    <div class="form-group">
+        <label class="w-100" for="name">Название места:</label>
+        <InputText class="w-100 form-control" id="name" @bind-Value="Prize.PlaceName" />
+    </div>
+    <div class="form-group">
+        <label class="w-100" for="name">Размер выигрыша:</label>
+        <InputNumber class="w-100 form-control" id="amount" @bind-Value="Prize.PrizeAmount" />
+    </div>
+    <p>или</p>
+    <div class="form-group">
+        <label class="w-100" for="name">Процент выигрыша:</label>
+        <InputNumber class="w-100 form-control" id="percentage" @bind-Value="Prize.PrizePercentage" />
+    </div>
+
+    <button type="submit" class="w-100 btn btn-primary">Создать приз</button>
+</EditForm>
+
+@code {
+    [Parameter]
+    public EventCallback<Prize> CallBack { get; set; }
+    private Prize Prize = new Prize();
+    private EditContext editContext;
+
+
+    protected override void OnInitialized()
+    {
+        editContext = new EditContext(Prize);
+    }
+    
+    private async Task HandleSubmit()
+    {
+        var isValid = editContext.Validate();
+
+        if (isValid)
+        {
+            Prize newPrize = new Prize(
+                   Prize.PlaceNumber,
+                   Prize.PlaceName,
+                   Prize.PrizeAmount,
+                   Prize.PrizePercentage);
+
+            prizeService.CreatePrize(newPrize);
+            CallBack.InvokeAsync(newPrize);
+            Prize = new Prize();
+        }
+        else
+        {
+
+        }
+    }
+
+
+}

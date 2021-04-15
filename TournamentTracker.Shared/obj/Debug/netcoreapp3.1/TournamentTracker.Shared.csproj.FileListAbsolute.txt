@@ -1,0 +1,13 @@
+C:\Users\Полина\source\repos\TournamentTracker\TournamentTracker.Shared\bin\Debug\netcoreapp3.1\TournamentTracker.Shared.exe
+C:\Users\Полина\source\repos\TournamentTracker\TournamentTracker.Shared\bin\Debug\netcoreapp3.1\TournamentTracker.Shared.deps.json
+C:\Users\Полина\source\repos\TournamentTracker\TournamentTracker.Shared\bin\Debug\netcoreapp3.1\TournamentTracker.Shared.runtimeconfig.json
+C:\Users\Полина\source\repos\TournamentTracker\TournamentTracker.Shared\bin\Debug\netcoreapp3.1\TournamentTracker.Shared.runtimeconfig.dev.json
+C:\Users\Полина\source\repos\TournamentTracker\TournamentTracker.Shared\bin\Debug\netcoreapp3.1\TournamentTracker.Shared.dll
+C:\Users\Полина\source\repos\TournamentTracker\TournamentTracker.Shared\bin\Debug\netcoreapp3.1\TournamentTracker.Shared.pdb
+C:\Users\Полина\source\repos\TournamentTracker\TournamentTracker.Shared\obj\Debug\netcoreapp3.1\TournamentTracker.Shared.csprojAssemblyReference.cache
+C:\Users\Полина\source\repos\TournamentTracker\TournamentTracker.Shared\obj\Debug\netcoreapp3.1\TournamentTracker.Shared.AssemblyInfoInputs.cache
+C:\Users\Полина\source\repos\TournamentTracker\TournamentTracker.Shared\obj\Debug\netcoreapp3.1\TournamentTracker.Shared.AssemblyInfo.cs
+C:\Users\Полина\source\repos\TournamentTracker\TournamentTracker.Shared\obj\Debug\netcoreapp3.1\TournamentTracker.Shared.csproj.CoreCompileInputs.cache
+C:\Users\Полина\source\repos\TournamentTracker\TournamentTracker.Shared\obj\Debug\netcoreapp3.1\TournamentTracker.Shared.dll
+C:\Users\Полина\source\repos\TournamentTracker\TournamentTracker.Shared\obj\Debug\netcoreapp3.1\TournamentTracker.Shared.pdb
+C:\Users\Полина\source\repos\TournamentTracker\TournamentTracker.Shared\obj\Debug\netcoreapp3.1\TournamentTracker.Shared.genruntimeconfig.cache

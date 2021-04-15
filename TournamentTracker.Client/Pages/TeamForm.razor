@@ -1,0 +1,132 @@
+﻿@page "/TeamForm"
+@using TournamentTracker.Shared.Models
+@using TournamentTracker.Client.Data
+
+@inject ITeamService teamService;
+@inject IMemberService memberService;
+
+
+
+<EditForm Model="@Team" OnValidSubmit="@HandleSubmit" class="w-50 mx-auto">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <h2 class="text-primary">Добавить команду</h2>
+    <div class="form-group">
+        <label class="w-100" for="name">Название команды:</label>
+        <InputText class="w-100 form-control" id="name" @bind-Value="Team.TeamName" />
+    </div>
+
+    @if (AllMembers != null)
+    {
+        <div class="form-group">
+            <div>
+                <label class="w-40" for="members">Выберете участника:</label>
+                <button class="btn btn-btn-outline-secondary w-40" @onclick="() => { ShowDialog = true; }">Создать нового участника</button>
+            </div>
+            
+            <InputSelect class="form-control w-100 mb-2" id="members" @bind-Value="@SelectedMemberId">
+                <option value="">Выберете участника ...</option>
+                @foreach (var member in AllMembers)
+                    {
+                    <option value="@member.Id.ToString()">@member.FullName</option>
+                    }
+            </InputSelect>
+            <button class="btn btn-primary w-100 mb-2" @onclick="addMemberToTeam" disabled="@(SelectedMemberId == null  ? true : false)">Добавить участника в команду</button>
+        </div>
+    }
+    <div class="form-group">
+        <div>
+            <label class="w-49" for="name">Участники команды:</label>
+            <button class="btn btn-outline-danger float-right w-49 mb-2 " @onclick="() => { Team.TeamMembers.Clear(); }">Удалить всех участников</button>
+        </div>
+        <p class="w-100">
+            @foreach (var m in Team.TeamMembers)
+                @(m.FullName + ", ")
+        </p>
+    </div>
+
+    <button type="submit" class="w-100 btn btn-primary">Создать команду</button>
+</EditForm>
+@if (ShowDialog)
+{
+    <div class=@(ShowDialog ? "show modal fade" : "modal fade") tabindex="-1" role="dialog" style="display: @(ShowDialog ? "block" : "none")">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <MemberForm CallBack="@UpdateAllMembersList" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="() => { ShowDialog = false;}">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public EventCallback<bool> CallBack { get; set; }
+
+    private bool ShouldUpdate = false;
+    private Team Team = new Team();
+    private EditContext editContext;
+    private List<Person> AllMembers;
+    private string SelectedMemberId;
+    private bool showDialog;
+    private bool ShowDialog
+    {
+        get => showDialog;
+        set
+        {
+            showDialog = value;
+            StateHasChanged();
+        }
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        await UpdateAllMembersList();
+        editContext = new EditContext(Team);
+    }
+    private async Task UpdateAllMembersList(bool shoulUpdate = true)
+    {
+        AllMembers = await memberService.GetMembers();
+        StateHasChanged();
+    }
+
+    private async Task HandleSubmit()
+    {
+        var isValid = editContext.Validate();
+
+        if (isValid)
+        {
+            Team newTeam = new Team
+            {
+                TeamName = Team.TeamName
+            };
+            int newTeamId = (await teamService.CreateTeam(newTeam)).Id;
+            foreach (var member in Team.TeamMembers)
+            {
+                member.TeamId = newTeamId;
+                await memberService.EditMember(member);
+            }
+
+            Team = new Team();
+            SelectedMemberId = null;
+            ShouldUpdate = true;
+            await CallBack.InvokeAsync(ShouldUpdate);
+            ShouldUpdate = false;
+            StateHasChanged();
+
+        }
+        else
+        {
+
+        }
+    }
+    private void addMemberToTeam()
+    {
+        Team.TeamMembers.Add(AllMembers.Find(x => x.Id.ToString() == SelectedMemberId.ToString()));
+    }
+
+
+}
